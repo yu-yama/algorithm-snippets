@@ -15,19 +15,21 @@ using usec = chrono::microseconds;
 using ll = long long;
 using mod_type = ll;
 
-constexpr ll extended_euclidean(const ll& a, const ll& b, ll& x, ll& y) noexcept {
+template<typename T, typename U>
+constexpr T extended_euclidean(const T& a, const T& b, U& x, U& y) noexcept {
     if (!b) {
         x = 1, y = 0;
         return a;
     }
-    ll t = a / b, r = extended_euclidean(b, a - t * b, y, x);
-    y -= t * x;
+    T t = a / b, r = extended_euclidean(b, a - b * t, y, x);
+    y -= x * t;
     return r;
 }
 
 template<mod_type m>
 struct Fp {
     using number_type = ll;
+    constexpr static number_type max_num = numeric_limits<number_type>::max();
     number_type n;
 private:
     constexpr void check_negative() noexcept {
@@ -73,13 +75,21 @@ public:
         return *this += -a;
     }
     constexpr Fp& operator*=(const Fp& a) noexcept {
-        (n *= a.n) %= m;
+        if (!a) return *this = 0;
+        if (n <= max_num / a.n) {
+            (n *= a.n) %= m;
+        } else {
+            Fp t(*this);
+            (t += t) *= Fp(a.n >> 1);
+            if (a.n & 1) *this += t;
+            else *this = t;
+        }
         return *this;
     }
     constexpr Fp inv() const noexcept {
-        number_type u, v;
-        extended_euclidean(n, m, u, v);
-        return Fp(u);
+        Fp u, v;
+        extended_euclidean<ll, Fp>(n, m, u, v);
+        return u;
     }
     constexpr Fp& operator/=(const Fp& a) noexcept {
         *this *= a.inv();
