@@ -195,29 +195,57 @@ int main() {
     ll x, y;
 
     BinomialCoefficient< Fp<MOD> > bc(10);
-    cout << bc.finv(9) << '\n';
-    cout << bc.finv(10) << "\n\n";
+    cout << bc.finv(9) << '\n'; // 712324701 (Fp<mod>(9)!.inv())
+    cout << bc.finv(10) << "\n\n"; // undefined behaviour (accessing out of range using operator[])
 
-    cout << extended_euclidean(111, 30, x, y) << '\n' << x << ", " << y << "\n\n";
+    cout << extended_euclidean<ll, ll>(111, 30, x, y) << '\n'; // 3 (= gcd(111, 30))
+    cout << x << ", " << y << "\n\n"; // 3, -11 (111 * 3 + 30 * (-11) = 3 = gcd(111, 30))
 
     Fp<MOD> d;
-    cout << d << "\n\n";
+    cout << d << "\n\n"; // 0
 
     ll t = Fp<MOD>(2);
-    cout << (t - 3) << '\n';
-    cout << Fp<MOD>(2).pow(100) << '\n';
-    cout << Fp<MOD>(2).pow(Fp<MOD>(100)) << "\n\n";
+    cout << (t - 3) << "\n\n"; // -1
 
     Fp<MOD> a(2);
-    cout << (++a) << '\n' << (a++) << '\n' << a << '\n' << (--a) << '\n' << (a--) << '\n' << a << "\n\n";
+    cout << (++a) << '\n' << (a++) << '\n' << a << '\n' << (--a) << '\n' << (a--) << '\n' << a << "\n\n"; // 3, 3, 4, 3, 3, 2
 
-    cout << (a -= 3) << '\n' << (a += 3) << '\n' << (a /= 3) << '\n' << (a *= 3) << "\n\n";
+    cout << (a -= 3) << '\n' << (a += 3) << '\n' << (a /= 3) << '\n' << (a *= 3) << "\n\n"; // 998244352, 2, 665496236, 2
 
-    cout << (a + 1) << '\n' << a << '\n' << (1 + a) << '\n' << a << '\n' << "\n\n";
+    cout << (a + 1) << '\n' << a << '\n' << (1 + a) << '\n' << a << '\n' << "\n\n"; // 3, 2, 3, 2
 
-    cout << (a - 1) << '\n' << a << '\n' << (1 - a) << '\n' << a << '\n' << "\n\n";
+    cout << (a - 1) << '\n' << a << '\n' << (1 - a) << '\n' << a << '\n' << "\n\n"; // 1, 2, 998244352, 2
 
-    cout << a << '\n' << +a << '\n' << a << '\n' << -a << '\n' << a << '\n' << a.pow(3) << '\n' << a << '\n' << a.pow(100) << '\n' << a << '\n' << a.inv() << '\n' << a << "\n\n";
+    cout << +a << '\n' << a << '\n' << -a << '\n' << a << "\n\n"; // 2, 2, 998244351, 2
+
+    cout << a.pow(3) << '\n' << a.pow(100) << '\n' << a.pow(1000000) << '\n' << a << "\n\n"; // 8, 882499718, 421273117
+
+    cout << a.inv() << '\n' << a << "\n\n"; // 499122177, 2
+
+    Fp<MODL> b(INFL);
+    cout << b << '\n'; // 6505812270818
+    cout << b * INFL << '\n'; // 6130151462911
+    cout << (b *= INFL) << "\n\n"; // 6130151462911
+
+    cout << Fp<MODL>(2).pow(122) << '\n'; // 9031593934686
+    cout << Fp<MODL>(2).pow(244) << '\n'; // 10412815166631
+    cout << Fp<MODL>(2).pow(1000000) << "\n\n"; // 13282742706460
+
+    usec st;
+
+    st = tNow;
+    Fp<MODL> basel(1);
+    for (int i = 0; i < 1000000; ++i) basel *= 2;
+    cout << basel << '\n'; // 13282742706460
+    cout << basel.inv() << '\n'; // 605537320149
+    cerr << (tNow - st).count() << "\n\n";
+
+    st = tNow;
+    Fp<MOD> base(1);
+    for (int i = 0; i < 1000000; ++i) base *= 2;
+    cout << base << '\n'; // 421273117
+    cout << base.inv() << '\n'; // 554214079
+    cerr << (tNow - st).count() << '\n';
 
     return 0;
 }
