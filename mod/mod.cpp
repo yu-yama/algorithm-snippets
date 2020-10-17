@@ -12,8 +12,7 @@
 using namespace std;
 
 using usec = chrono::microseconds;
-using ll = long long;
-using mod_type = ll;
+using mod_type = long long;
 
 template<typename T, typename U>
 constexpr T extended_euclidean(const T& a, const T& b, U& x, U& y) noexcept {
@@ -28,7 +27,7 @@ constexpr T extended_euclidean(const T& a, const T& b, U& x, U& y) noexcept {
 
 template<mod_type m>
 struct Fp {
-    using number_type = ll;
+    using number_type = long long;
     constexpr static number_type max_num = numeric_limits<number_type>::max();
     number_type n;
 private:
@@ -88,7 +87,7 @@ public:
     }
     constexpr Fp inv() const noexcept {
         Fp u, v;
-        extended_euclidean<ll, Fp>(n, m, u, v);
+        extended_euclidean<long long, Fp>(n, m, u, v);
         return u;
     }
     constexpr Fp& operator/=(const Fp& a) noexcept {
@@ -144,7 +143,7 @@ public:
 
 template<class T>
 struct BinomialCoefficient {
-    using index_type = ll;
+    using index_type = long long;
     vector<T> fact_, inv_, finv_;
     constexpr BinomialCoefficient() noexcept {}
     constexpr BinomialCoefficient(index_type n) noexcept {
@@ -179,7 +178,7 @@ struct BinomialCoefficient {
 
 template<class T>
 struct Stirling {
-    using index_type = ll;
+    using index_type = long long;
     vector< vector<T> > s;
     constexpr Stirling(index_type m) noexcept : s(m, vector<T>(m, 0)) {
         s[0][0] = 1;
@@ -192,19 +191,19 @@ struct Stirling {
 };
 
 int main() {
-    ll x, y;
+    long long x, y;
 
     BinomialCoefficient< Fp<MOD> > bc(10);
     cout << bc.finv(9) << '\n'; // 712324701 (Fp<mod>(9)!.inv())
     cout << bc.finv(10) << "\n\n"; // undefined behaviour (accessing out of range using operator[])
 
-    cout << extended_euclidean<ll, ll>(111, 30, x, y) << '\n'; // 3 (= gcd(111, 30))
+    cout << extended_euclidean<long long, long long>(111, 30, x, y) << '\n'; // 3 (= gcd(111, 30))
     cout << x << ", " << y << "\n\n"; // 3, -11 (111 * 3 + 30 * (-11) = 3 = gcd(111, 30))
 
     Fp<MOD> d;
     cout << d << "\n\n"; // 0
 
-    ll t = Fp<MOD>(2);
+    long long t = Fp<MOD>(2);
     cout << (t - 3) << "\n\n"; // -1
 
     Fp<MOD> a(2);
