@@ -2,10 +2,11 @@
 #include <limits>
 #include <vector>
 #include <chrono>
-#define MOD 998244353
-#define MODL 29996224275833
-#define INF (1 << 30)
-#define INFL (1LL << 62)
+
+constexpr int MOD = 998244353;
+constexpr long long MODL = 29996224275833;
+constexpr int INF = (1 << 30);
+constexpr long long INFL = (1LL << 62);
 
 #define tNow chrono::duration_cast<usec>(chrono::system_clock::now().time_since_epoch())
 
