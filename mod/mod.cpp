@@ -8,12 +8,14 @@ constexpr long long MODL = 29996224275833;
 constexpr int INF = (1 << 30);
 constexpr long long INFL = (1LL << 62);
 
-#define tNow chrono::duration_cast<usec>(chrono::system_clock::now().time_since_epoch())
-
 using namespace std;
 
 using usec = chrono::microseconds;
 using mod_type = long long;
+
+usec tNow() {
+    return chrono::duration_cast<usec>(chrono::system_clock::now().time_since_epoch());
+}
 
 template<typename T, typename U>
 constexpr T extended_euclidean(const T& a, const T& b, U& x, U& y) noexcept {
@@ -233,19 +235,19 @@ int main() {
 
     usec st;
 
-    st = tNow;
+    st = tNow();
     Fp<MODL> basel(1);
     for (int i = 0; i < 1000000; ++i) basel *= 2;
     cout << basel << '\n'; // 13282742706460
     cout << basel.inv() << '\n'; // 605537320149
-    cerr << (tNow - st).count() << "\n\n";
+    cerr << (tNow() - st).count() << "\n\n";
 
-    st = tNow;
+    st = tNow();
     Fp<MOD> base(1);
     for (int i = 0; i < 1000000; ++i) base *= 2;
     cout << base << '\n'; // 421273117
     cout << base.inv() << '\n'; // 554214079
-    cerr << (tNow - st).count() << '\n';
+    cerr << (tNow() - st).count() << '\n';
 
     return 0;
 }
