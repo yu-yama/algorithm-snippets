@@ -5,8 +5,10 @@
 
 using namespace std;
 
-constexpr long long abs_(const long long& n) {
-    return (n < 0 ? -n : n);
+namespace {
+    constexpr long long abs_(const long long& n) {
+        return (n < 0 ? -n : n);
+    }
 }
 
 struct Rational {
