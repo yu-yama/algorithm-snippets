@@ -129,7 +129,7 @@ public:
         return n != a.n;
     }
     constexpr Fp pow(const number_type& a) const noexcept {
-        if (!a) return 1;
+        if (!a) return Fp(1);
         if (a < 0) return inv().pow(-a);
         Fp t = pow(a >> 1);
         t *= t;
