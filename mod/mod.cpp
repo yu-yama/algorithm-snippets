@@ -32,8 +32,8 @@ template<mod_type m>
 struct Fp {
     using number_type = long long;
     constexpr static number_type max_num = numeric_limits<number_type>::max();
-    number_type n;
 private:
+    number_type n;
     constexpr void check_negative() noexcept {
         if (n < 0) n += m;
     }
