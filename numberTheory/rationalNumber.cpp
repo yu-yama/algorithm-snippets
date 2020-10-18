@@ -1,19 +1,19 @@
 #include <iostream>
 #include <numeric>
 #include <cmath>
-// #include <boost/multiprecision/cpp_int.hpp>
+#include <boost/multiprecision/cpp_int.hpp>
 
 using namespace std;
 
 namespace {
-    constexpr long long abs_(const long long& n) {
+    template<typename T>
+    constexpr T abs_(const T& n) {
         return (n < 0 ? -n : n);
     }
 }
 
+template<typename number_type>
 struct Rational {
-    using number_type = long long;
-    // using number_type = boost::multiprecision::cpp_int;
 private:
     number_type n, d;
     constexpr void check_zero() const {
@@ -22,7 +22,7 @@ private:
     constexpr Rational& reduce() {
         check_zero();
         if (d < 0) n = -n, d = -d;
-        number_type g = gcd(abs_(n), d);
+        number_type g = gcd(abs_<number_type>(n), d);
         n /= g, d /= g;
         return *this;
     }
@@ -105,7 +105,7 @@ public:
         return Rational(*this) /= a;
     }
     constexpr Rational pow(const number_type& a) const {
-        if (!a) return 1;
+        if (!a) return Rational(1);
         if (a < 0) return pow(-a).reciprocal();
         Rational t = pow(a >> 1);
         t *= t;
@@ -146,21 +146,22 @@ public:
         return s << a.n << '/' << a.d;
     }
 };
-bool Rational::integral_input = false;
+template<typename number_type>
+bool Rational<number_type>::integral_input = false;
 
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-    cout << Rational() << '\n'; // 0/1
-    cout << Rational(3) << '\n'; // 3/1
-    cout << Rational(-3) << '\n'; // -3/1
-    cout << Rational(3, 6) << '\n'; // 1/2
-    cout << Rational(-3, 6) << '\n'; // -1/2
-    cout << Rational(3, -6) << '\n'; // -1/2
-    cout << Rational(-3, -6) << '\n'; // 1/2
+    cout << Rational<long long>() << '\n'; // 0/1
+    cout << Rational<long long>(3) << '\n'; // 3/1
+    cout << Rational<long long>(-3) << '\n'; // -3/1
+    cout << Rational<long long>(3, 6) << '\n'; // 1/2
+    cout << Rational<long long>(-3, 6) << '\n'; // -1/2
+    cout << Rational<long long>(3, -6) << '\n'; // -1/2
+    cout << Rational<long long>(-3, -6) << '\n'; // 1/2
     cout << '\n';
 
-    Rational a(3, 5);
+    Rational<long long> a(3, 5);
 
     cout << a << '\n'; // 3/5
     cout << a.numerator() << '\n' << a.denominator() << '\n' << a.reciprocal() << '\n'; // 3, 5, 5/3
@@ -199,15 +200,28 @@ int main() {
     cout << (a == c) << '\n' << (a != c) << '\n' << (a < c) << '\n' << (a <= c) << '\n' << (a > c) << '\n' << (a >= c) << '\n'; // 0, 1, 1, 1, 0, 0
     cout << '\n';
 
-    Rational::integral_input = true;
+    Rational<long long>::integral_input = true;
     cin >> a;
     cout << a << '\n'; // [input]/1
     cout << '\n';
 
-    Rational::integral_input = false;
+    Rational<long long>::integral_input = false;
     cin >> a;
     cout << a << '\n'; // [input 1]/[input 2]
     cout << '\n';
+
+    namespace mp = boost::multiprecision;
+    cout << Rational<mp::cpp_int>() << '\n';
+    cout << Rational<mp::cpp_int>(3) << '\n';
+    cout << Rational<mp::cpp_int>(-3) << '\n';
+    cout << Rational<mp::cpp_int>(3, 6) << '\n';
+    cout << Rational<mp::cpp_int>(-3, 6) << '\n';
+    cout << Rational<mp::cpp_int>(3, -6) << '\n';
+    cout << Rational<mp::cpp_int>(-3, -6) << '\n';
+
+    Rational<mp::cpp_int> amp(3, 5);
+    cout << a.pow(100) << '\n';
+    cout << amp.pow(100) << '\n';
 
     return 0;
 }
