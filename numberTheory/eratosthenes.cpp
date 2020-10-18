@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <chrono>
+#include <cmath>
 
 using namespace std;
 
@@ -12,6 +13,8 @@ private:
     vector<number_type> primes_;
 public:
     Eratosthenes(size_type n) : is_prime_(n, true) {
+        if (n <= 0) return;
+        primes_.reserve(n / log(n) * 1.2);
         is_prime_[0] = (is_prime_[1] = false);
         for (size_type i = 2; i < n; ++i) if (is_prime_[i]) {
             primes_.push_back(i);
