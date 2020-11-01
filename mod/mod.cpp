@@ -115,11 +115,6 @@ public:
         }
         return *this;
     }
-    constexpr Fp inv() const noexcept {
-        Fp u, v;
-        extended_euclidean<long long, Fp>(n, m, u, v);
-        return u;
-    }
     constexpr Fp& operator/=(const Fp& a) noexcept {
         *this *= a.inv();
         check_negative();
@@ -149,12 +144,6 @@ public:
     template<typename T> friend constexpr Fp operator/(const T& a, const Fp& b) noexcept {
         return (b / a).inv();
     }
-    constexpr bool operator==(const Fp& a) const noexcept {
-        return n == a.n;
-    }
-    constexpr bool operator!=(const Fp& a) const noexcept {
-        return n != a.n;
-    }
     constexpr Fp pow(const number_type& a) const noexcept {
         if (!a) return Fp(1);
         if (a < 0) return inv().pow(-a);
@@ -162,6 +151,17 @@ public:
         t *= t;
         if (a & 1) t *= *this;
         return t;
+    }
+    constexpr Fp inv() const noexcept {
+        Fp u, v;
+        extended_euclidean<long long, Fp>(n, m, u, v);
+        return u;
+    }
+    constexpr bool operator==(const Fp& a) const noexcept {
+        return n == a.n;
+    }
+    constexpr bool operator!=(const Fp& a) const noexcept {
+        return n != a.n;
     }
     friend constexpr istream& operator>>(istream& s, Fp& a) {
         return s >> a.n;
