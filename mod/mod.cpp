@@ -3,19 +3,7 @@
 #include <vector>
 #include <chrono>
 
-constexpr int MOD = 998244353;
-constexpr long long MODL = 29996224275833;
-constexpr int INF = (1 << 30);
-constexpr long long INFL = (1LL << 62);
-
 using namespace std;
-
-using usec = chrono::microseconds;
-using mod_type = long long;
-
-usec tNow() {
-    return chrono::duration_cast<usec>(chrono::system_clock::now().time_since_epoch());
-}
 
 namespace {
     struct Barrett {
@@ -55,6 +43,7 @@ constexpr T extended_euclidean(const T& a, const T& b, U& x, U& y) noexcept {
     return r;
 }
 
+using mod_type = long long;
 template<mod_type m>
 struct Fp {
     using number_type = long long;
@@ -220,7 +209,17 @@ struct Stirling {
     }
 };
 
+using usec = chrono::microseconds;
+
+usec tNow() {
+    return chrono::duration_cast<usec>(chrono::system_clock::now().time_since_epoch());
+}
+
 int main() {
+    constexpr int MOD = 998244353;
+    constexpr long long MODL = 29996224275833;
+    // constexpr int INF = (1 << 30);
+    constexpr long long INFL = (1LL << 62);
     long long x, y;
 
     BinomialCoefficient< Fp<MOD> > bc(10);
