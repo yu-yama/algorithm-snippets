@@ -41,7 +41,7 @@ public:
     constexpr Fp(number_type nn = 0) noexcept : n(nn % m) {
         check_negative();
     }
-    constexpr mod_type mod() const noexcept {
+    constexpr static mod_type mod() {
         return m;
     }
     template<typename T> constexpr operator T() const {
