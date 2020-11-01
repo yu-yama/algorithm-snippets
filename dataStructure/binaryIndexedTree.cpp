@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <sstream>
 
 using namespace std;
 
@@ -24,6 +25,33 @@ struct BIT {
     number_type sum(index_type i, index_type j) const {
         return sum(j) - sum(i);
     }
+    struct BITElement {
+        using index_type = typename BIT<number_type>::index_type;
+        BIT<number_type>& b;
+        index_type i;
+        BITElement(BIT<number_type>& bb, index_type ii) : b(bb), i(ii) {}
+        BITElement& operator++() noexcept {
+            return *this += 1;
+        }
+        BITElement& operator--() noexcept {
+            return *this -= 1;
+        }
+        BITElement& operator+=(number_type x) {
+            b.add(i, x);
+            return *this;
+        }
+        BITElement& operator-=(number_type x) {
+            return *this += -x;
+        }
+    };
+    constexpr BITElement at(index_type i) {
+        if (i < 0 || i >= n) {
+            ostringstream e;
+            e << "BIT::at out_of_range (index " << i << " given to a BIT of length " << n << ")\n";
+            throw out_of_range(e.str());
+        }
+        return BITElement(*this, i);
+    }
     constexpr number_type size() const noexcept {
         return n;
     }
@@ -40,7 +68,7 @@ int main() {
     for (ll i = 0; i < q; ++i) {
         cin >> t >> u >> v;
         if (t) cout << b.sum(u, v) << '\n';
-        else b.add(u, v);
+        else b.at(u) += v;
     }
     return 0;
 }
