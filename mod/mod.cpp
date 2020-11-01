@@ -17,6 +17,33 @@ usec tNow() {
     return chrono::duration_cast<usec>(chrono::system_clock::now().time_since_epoch());
 }
 
+namespace {
+    struct Barrett {
+        using single_int = uint32_t;
+        using double_int = uint64_t;
+        single_int m;
+        double_int im;
+        constexpr Barrett(single_int mm) : m(mm), im((double_int)-1 / m + 1) {}
+        constexpr single_int umod() const {
+            return m;
+        }
+        constexpr single_int mul(single_int a, single_int b) const {
+            double_int z = a;
+            z *= b;
+            #ifdef _MSC_VER
+                double_int x;
+                _umul128(z, im, &x);
+            #else
+                using quadruple_int = unsigned __int128;
+                double_int x = (quadruple_int(z) * im) >> 64;
+            #endif
+            single_int v = z - x * m;
+            if (m <= v) v += m;
+            return v;
+        }
+    };
+}
+
 template<typename T, typename U>
 constexpr T extended_euclidean(const T& a, const T& b, U& x, U& y) noexcept {
     if (!b) {
