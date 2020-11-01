@@ -1,29 +1,46 @@
-#include <cstdio>
+#include <iostream>
 #include <vector>
 
 using namespace std;
-typedef long long ll;
 
-// Binary Indexed Tree (Fenwick Tree)
-template<typename T>
+template<typename number_type>
 struct BIT {
-    ll n;
-    vector<T> d;
-    BIT(ll n = 0) : n(n), d(n + 1) {}
-    void add(ll i, T x = 1) {
-        for (i++; i <= n; i += i & -i) d.at(i) += x;
+    using index_type = long long;
+    index_type n;
+    vector<number_type> d;
+    // constructor: create a binary indexed tree with n elements (0-indexed)
+    BIT(index_type nn = 0) : n(nn), d(nn + 1) {}
+    // add(i – 0-indexed, x – number to add): add x to the i-th element
+    void add(index_type i, const number_type& x) {
+        for (++i; i <= n; i += i & -i) d.at(i) += x;
     }
-    T sum(ll i) {
-        T x = 0;
-        for (i++; i; i -= i & -i) x += d.at(i);
+    // sum(i – 0-indexed): return sum of k-th elements where k ∈ [0, i)
+    number_type sum(index_type i) const {
+        number_type x = 0;
+        for (; i > 0; i -= i & -i) x += d.at(i);
         return x;
     }
-    T rangesum(ll l, ll r) {
-        return sum(r) - sum(l - 1);
+    // sum(i – 0-indexed, j – 0-indexed): return sum of k-th elements where k ∈ [i, j)
+    number_type sum(index_type i, index_type j) const {
+        return sum(j) - sum(i);
+    }
+    constexpr number_type size() const noexcept {
+        return n;
     }
 };
 
 int main() {
-    ;
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    using ll = long long;
+    ll n, q, a, t, u, v;
+    cin >> n >> q;
+    BIT<ll> b(n);
+    for (ll i = 0; i < n; ++i) cin >> a, b.add(i, a);
+    for (ll i = 0; i < q; ++i) {
+        cin >> t >> u >> v;
+        if (t) cout << b.sum(u, v) << '\n';
+        else b.add(u, v);
+    }
     return 0;
 }
