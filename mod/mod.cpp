@@ -50,6 +50,9 @@ using mod_type = long long;
 template<mod_type m>
 struct Fp {
     using number_type = long long;
+    constexpr static bool is_barrett_safe = m <= (mod_type)numeric_limits<Barrett::single_int>::max();
+    constexpr static bool use_barrett = false && is_barrett_safe;
+    constexpr static Barrett bt{m};
     constexpr static number_type max_num = numeric_limits<number_type>::max();
 private:
     number_type n;
@@ -96,14 +99,17 @@ public:
         return *this += -a;
     }
     constexpr Fp& operator*=(const Fp& a) noexcept {
-        if (!a) return *this = 0;
-        if (n <= max_num / a.n) {
-            (n *= a.n) %= m;
-        } else {
-            Fp t(*this);
-            (t += t) *= Fp(a.n >> 1);
-            if (a.n & 1) *this += t;
-            else *this = t;
+        if constexpr (use_barrett) n = bt.mul(n, a.n);
+        else {
+            if (!a) n = 0;
+            else if (n <= max_num / a.n) {
+                (n *= a.n) %= m;
+            } else {
+                Fp t(*this);
+                (t += t) *= Fp(a.n >> 1);
+                if (a.n & 1) *this += t;
+                else *this = t;
+            }
         }
         return *this;
     }
