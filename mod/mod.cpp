@@ -276,17 +276,17 @@ int main() {
 
     st = tNow();
     Fp<MODL> basel(1);
-    for (int i = 0; i < 1000000; ++i) basel *= 2;
-    cout << basel << '\n'; // 13282742706460
-    cout << basel.inv() << '\n'; // 605537320149
+    for (int i = 0; i < 1000000000; ++i) basel *= 2;
+    cout << basel << '\n'; // 26024802902219
+    cout << basel.inv() << '\n'; // 2636315093014
     cerr << (tNow() - st).count() << '\n';
     cout << '\n';
 
     st = tNow();
     Fp<MOD> base(1);
-    for (int i = 0; i < 1000000; ++i) base *= 2;
-    cout << base << '\n'; // 421273117
-    cout << base.inv() << '\n'; // 554214079
+    for (int i = 0; i < 1000000000; ++i) base *= 2;
+    cout << base << '\n'; // 851104391
+    cout << base.inv() << '\n'; // 394316601
     cerr << (tNow() - st).count() << '\n';
     cout << '\n';
 
