@@ -15,9 +15,7 @@ namespace {
         constexpr single_int umod() const {
             return m;
         }
-        constexpr single_int mul(single_int a, single_int b) const {
-            double_int z = a;
-            z *= b;
+        constexpr single_int reduce(double_int z) const {
             #ifdef _MSC_VER
                 double_int x;
                 _umul128(z, im, &x);
@@ -28,6 +26,11 @@ namespace {
             single_int v = z - x * m;
             if (m <= v) v += m;
             return v;
+        }
+        constexpr single_int mul(single_int a, single_int b) const {
+            double_int z = a;
+            z *= b;
+            return reduce(z);
         }
     };
 }
