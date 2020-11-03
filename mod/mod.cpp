@@ -56,12 +56,12 @@ struct Fp {
     constexpr static number_type max_num = numeric_limits<number_type>::max();
 private:
     number_type n;
-    constexpr void check_negative() noexcept {
+    constexpr void fix_negative() noexcept {
         if (n < 0) n += m;
     }
 public:
     constexpr Fp(number_type nn = 0) noexcept : n(nn % m) {
-        check_negative();
+        fix_negative();
     }
     constexpr static mod_type mod() {
         return m;
@@ -115,7 +115,7 @@ public:
     }
     constexpr Fp& operator/=(const Fp& a) noexcept {
         *this *= a.inv();
-        check_negative();
+        fix_negative();
         return *this;
     }
     constexpr Fp operator+(const Fp& a) const noexcept {
