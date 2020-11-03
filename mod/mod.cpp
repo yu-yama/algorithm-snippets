@@ -115,7 +115,6 @@ public:
     }
     constexpr Fp& operator/=(const Fp& a) noexcept {
         *this *= a.inv();
-        fix_negative();
         return *this;
     }
     constexpr Fp operator+(const Fp& a) const noexcept {
