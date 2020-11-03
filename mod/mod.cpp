@@ -12,6 +12,9 @@ namespace {
         single_int m;
         double_int im;
         constexpr Barrett(single_int mm) : m(mm), im((double_int)-1 / m + 1) {}
+        constexpr static single_int max_mod() {
+            return numeric_limits<single_int>::max();
+        }
         constexpr single_int umod() const {
             return m;
         }
@@ -50,7 +53,7 @@ using mod_type = long long;
 template<mod_type m>
 struct Fp {
     using number_type = long long;
-    constexpr static bool is_barrett_safe = m <= (mod_type)numeric_limits<Barrett::single_int>::max();
+    constexpr static bool is_barrett_safe = m <= mod_type(Barrett::max_mod());
     constexpr static bool use_barrett = false && is_barrett_safe;
     constexpr static Barrett bt{m};
     constexpr static number_type max_num = numeric_limits<number_type>::max();
