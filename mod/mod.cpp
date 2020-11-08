@@ -171,6 +171,152 @@ public:
     }
 };
 
+using mod_id_type = int;
+template<mod_id_type id>
+struct DynamicFp {
+    using number_type = long long;
+    constexpr static number_type max_num = numeric_limits<number_type>::max();
+    constexpr static mod_type DEFAULT_MOD = 998244353;
+private:
+    static mod_type m;
+    static Barrett bt;
+    static bool instances_created;
+    number_type n;
+    constexpr bool is_barrett_safe() {
+        return m <= mod_type(Barrett::max_mod());
+    }
+    constexpr bool use_barrett() {
+        return true && is_barrett_safe();
+    }
+    constexpr void fix_negative() noexcept {
+        if (n < 0) n += m;
+    }
+public:
+    constexpr DynamicFp(number_type nn = 0) noexcept : n(nn % m) {
+        fix_negative();
+        instances_created = true;
+    }
+    constexpr DynamicFp(number_type nn, mod_type mm) : n(nn % mm) {
+        fix_negative();
+        set_mod(mm);
+        instances_created = true;
+    }
+    constexpr mod_type mod() noexcept {
+        return m;
+    }
+    constexpr void set_mod(mod_type mm) {
+        if (instances_created) throw runtime_error("mod cannot be reset after instance(s) are created");
+        if (mm < 2) throw invalid_argument("mod can only be two or greater");
+        bt = Barrett(m = mm);
+    }
+    template<typename T> constexpr operator T() const {
+        return T(n);
+    }
+    constexpr DynamicFp operator+() const noexcept {
+        return *this;
+    }
+    constexpr DynamicFp operator-() const noexcept {
+        return n ? m - n : 0;
+    }
+    constexpr DynamicFp& operator++() noexcept {
+        return *this += 1;
+    }
+    constexpr DynamicFp operator++(int) noexcept {
+        DynamicFp t(*this);
+        ++(*this);
+        return t;
+    }
+    constexpr DynamicFp& operator--() noexcept {
+        return *this -= 1;
+    }
+    constexpr DynamicFp operator--(int) noexcept {
+        DynamicFp t(*this);
+        --(*this);
+        return t;
+    }
+    constexpr DynamicFp& operator+=(const DynamicFp& a) noexcept {
+        if ((n += a.n) >= m) n -= m;
+        return *this;
+    }
+    constexpr DynamicFp& operator-=(const DynamicFp& a) noexcept {
+        return *this += -a;
+    }
+    constexpr DynamicFp& operator*=(const DynamicFp& a) noexcept {
+        if (use_barrett()) n = bt.mul(n, a.n);
+        else {
+            if (!a) n = 0;
+            else if (n <= max_num / a.n) {
+                (n *= a.n) %= m;
+            } else {
+                DynamicFp t(*this);
+                (t += t) *= DynamicFp(a.n >> 1);
+                if (a.n & 1) *this += t;
+                else *this = t;
+            }
+        }
+        return *this;
+    }
+    constexpr DynamicFp& operator/=(const DynamicFp& a) noexcept {
+        *this *= a.inv();
+        return *this;
+    }
+    constexpr DynamicFp operator+(const DynamicFp& a) const noexcept {
+        return DynamicFp(*this) += a;
+    }
+    template<typename T> friend constexpr DynamicFp operator+(const T& a, const DynamicFp& b) noexcept {
+        return b + a;
+    }
+    constexpr DynamicFp operator-(const DynamicFp& a) const noexcept {
+        return DynamicFp(*this) -= a;
+    }
+    template<typename T> friend constexpr DynamicFp operator-(const T& a, const DynamicFp& b) noexcept {
+        return -(b - a);
+    }
+    constexpr DynamicFp operator*(const DynamicFp& a) const noexcept {
+        return DynamicFp(*this) *= a;
+    }
+    template<typename T> friend constexpr DynamicFp operator*(const T& a, const DynamicFp& b) noexcept {
+        return b * a;
+    }
+    constexpr DynamicFp operator/(const DynamicFp& a) const noexcept {
+        return DynamicFp(*this) /= a;
+    }
+    template<typename T> friend constexpr DynamicFp operator/(const T& a, const DynamicFp& b) noexcept {
+        return (b / a).inv();
+    }
+    constexpr DynamicFp pow(const number_type& a) const noexcept {
+        if (!a) return DynamicFp(1);
+        if (a < 0) return inv().pow(-a);
+        DynamicFp t = pow(a >> 1);
+        t *= t;
+        if (a & 1) t *= *this;
+        return t;
+    }
+    constexpr DynamicFp inv() const noexcept {
+        DynamicFp u(m), v(m);
+        extended_euclidean<long long, DynamicFp>(n, m, u, v);
+        return u;
+    }
+    constexpr bool operator==(const DynamicFp& a) const noexcept {
+        return n == a.n;
+    }
+    constexpr bool operator!=(const DynamicFp& a) const noexcept {
+        return n != a.n;
+    }
+    friend istream& operator>>(istream& s, DynamicFp& a) {
+        return s >> a.n;
+    }
+    friend ostream& operator<<(ostream& s, const DynamicFp& a) {
+        return s << a.n;
+    }
+};
+template<mod_id_type id>
+mod_type DynamicFp<id>::m{DynamicFp<id>::DEFAULT_MOD};
+template<mod_id_type id>
+Barrett DynamicFp<id>::bt{DynamicFp<id>::DEFAULT_MOD};
+template<mod_id_type id>
+bool DynamicFp<id>::instances_created = false;
+
 template<class T>
 struct BinomialCoefficient {
     using index_type = long long;
@@ -301,6 +447,50 @@ int main() {
     cerr << (tNow() - st).count() << '\n';
     cout << '\n';
 
+    cout << '\n';
+
+    DynamicFp<1> da(2, 998244353);
+    cout << da.mod() << '\n'; // 998244353
+    cout << '\n';
+
+    cout << (++da) << '\n' << (da++) << '\n' << da << '\n' << (--da) << '\n' << (da--) << '\n' << da << '\n'; // 3, 3, 4, 3, 3, 2
+    cout << '\n';
+
+    cout << (da -= 3) << '\n' << (da += 3) << '\n' << (da /= 3) << '\n' << (da *= 3) << '\n'; // 998244352, 2, 665496236, 2
+    cout << '\n';
+
+    cout << (da + 1) << '\n' << da << '\n' << (1 + da) << '\n' << da << '\n' << '\n'; // 3, 2, 3, 2
+    cout << '\n';
+
+    cout << (da - 1) << '\n' << da << '\n' << (1 - da) << '\n' << da << '\n' << '\n'; // 1, 2, 998244352, 2
+    cout << '\n';
+
+    cout << +da << '\n' << da << '\n' << -da << '\n' << da << '\n'; // 2, 2, 998244351, 2
+    cout << '\n';
+
+    cout << da.pow(3) << '\n' << da.pow(100) << '\n' << da.pow(1000000) << '\n' << da << '\n'; // 8, 882499718, 421273117, 2
+    cout << '\n';
+
+    cout << da.inv() << '\n' << da << '\n'; // 499122177, 2
+    cout << '\n';
+
+    DynamicFp<2> db(INFL, MODL);
+    cout << db << '\n'; // 6505812270818
+    cout << db * INFL << '\n'; // 6130151462911
+    cout << (db *= INFL) << '\n'; // 6130151462911
+    cout << '\n';
+
+    cout << DynamicFp<2>(2).pow(122) << '\n'; // 9031593934686
+    cout << DynamicFp<2>(2).pow(244) << '\n'; // 10412815166631
+    cout << DynamicFp<2>(2).pow(1000000) << '\n'; // 13282742706460
+    cout << '\n';
+
+    st = tNow();
+    DynamicFp<1> dbase(1);
+    for (int i = 0; i < 1000000000; ++i) dbase *= 2;
+    cout << dbase << '\n'; // 851104391
+    cout << dbase.inv() << '\n'; // 394316601
+    cerr << (tNow() - st).count() << '\n'; // 27203 ms w/o Barrett, 8759 ms w/ Barrett
     cout << '\n';
 
     return 0;
