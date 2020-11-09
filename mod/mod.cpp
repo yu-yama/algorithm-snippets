@@ -51,7 +51,7 @@ constexpr T extended_euclidean(const T& a, const T& b, U& x, U& y) noexcept {
 
 using mod_type = long long;
 template<mod_type m>
-struct Fp {
+struct StaticFp {
     using number_type = long long;
     constexpr static bool is_barrett_safe = m <= mod_type(Barrett::max_mod());
     constexpr static bool use_barrett = false && is_barrett_safe;
@@ -63,7 +63,7 @@ private:
         if (n < 0) n += m;
     }
 public:
-    constexpr Fp(number_type nn = 0) noexcept : n(nn % m) {
+    constexpr StaticFp(number_type nn = 0) noexcept : n(nn % m) {
         fix_negative();
     }
     constexpr static mod_type mod() {
@@ -72,101 +72,101 @@ public:
     template<typename T> constexpr operator T() const {
         return T(n);
     }
-    constexpr Fp operator+() const noexcept {
+    constexpr StaticFp operator+() const noexcept {
         return *this;
     }
-    constexpr Fp operator-() const noexcept {
+    constexpr StaticFp operator-() const noexcept {
         return n ? m - n : 0;
     }
-    constexpr Fp& operator++() noexcept {
+    constexpr StaticFp& operator++() noexcept {
         return *this += 1;
     }
-    constexpr Fp operator++(int) noexcept {
-        Fp t(*this);
+    constexpr StaticFp operator++(int) noexcept {
+        StaticFp t(*this);
         ++(*this);
         return t;
     }
-    constexpr Fp& operator--() noexcept {
+    constexpr StaticFp& operator--() noexcept {
         return *this -= 1;
     }
-    constexpr Fp operator--(int) noexcept {
-        Fp t(*this);
+    constexpr StaticFp operator--(int) noexcept {
+        StaticFp t(*this);
         --(*this);
         return t;
     }
-    constexpr Fp& operator+=(const Fp& a) noexcept {
+    constexpr StaticFp& operator+=(const StaticFp& a) noexcept {
         if ((n += a.n) >= m) n -= m;
         return *this;
     }
-    constexpr Fp& operator-=(const Fp& a) noexcept {
+    constexpr StaticFp& operator-=(const StaticFp& a) noexcept {
         return *this += -a;
     }
-    constexpr Fp& operator*=(const Fp& a) noexcept {
+    constexpr StaticFp& operator*=(const StaticFp& a) noexcept {
         if constexpr (use_barrett) n = bt.mul(n, a.n);
         else {
             if (!a) n = 0;
             else if (n <= max_num / a.n) {
                 (n *= a.n) %= m;
             } else {
-                Fp t(*this);
-                (t += t) *= Fp(a.n >> 1);
+                StaticFp t(*this);
+                (t += t) *= StaticFp(a.n >> 1);
                 if (a.n & 1) *this += t;
                 else *this = t;
             }
         }
         return *this;
     }
-    constexpr Fp& operator/=(const Fp& a) noexcept {
+    constexpr StaticFp& operator/=(const StaticFp& a) noexcept {
         *this *= a.inv();
         return *this;
     }
-    constexpr Fp operator+(const Fp& a) const noexcept {
-        return Fp(*this) += a;
+    constexpr StaticFp operator+(const StaticFp& a) const noexcept {
+        return StaticFp(*this) += a;
     }
-    template<typename T> friend constexpr Fp operator+(const T& a, const Fp& b) noexcept {
+    template<typename T> friend constexpr StaticFp operator+(const T& a, const StaticFp& b) noexcept {
         return b + a;
     }
-    constexpr Fp operator-(const Fp& a) const noexcept {
-        return Fp(*this) -= a;
+    constexpr StaticFp operator-(const StaticFp& a) const noexcept {
+        return StaticFp(*this) -= a;
     }
-    template<typename T> friend constexpr Fp operator-(const T& a, const Fp& b) noexcept {
+    template<typename T> friend constexpr StaticFp operator-(const T& a, const StaticFp& b) noexcept {
         return -(b - a);
     }
-    constexpr Fp operator*(const Fp& a) const noexcept {
-        return Fp(*this) *= a;
+    constexpr StaticFp operator*(const StaticFp& a) const noexcept {
+        return StaticFp(*this) *= a;
     }
-    template<typename T> friend constexpr Fp operator*(const T& a, const Fp& b) noexcept {
+    template<typename T> friend constexpr StaticFp operator*(const T& a, const StaticFp& b) noexcept {
         return b * a;
     }
-    constexpr Fp operator/(const Fp& a) const noexcept {
-        return Fp(*this) /= a;
+    constexpr StaticFp operator/(const StaticFp& a) const noexcept {
+        return StaticFp(*this) /= a;
     }
-    template<typename T> friend constexpr Fp operator/(const T& a, const Fp& b) noexcept {
+    template<typename T> friend constexpr StaticFp operator/(const T& a, const StaticFp& b) noexcept {
         return (b / a).inv();
     }
-    constexpr Fp pow(const number_type& a) const noexcept {
-        if (!a) return Fp(1);
+    constexpr StaticFp pow(const number_type& a) const noexcept {
+        if (!a) return StaticFp(1);
         if (a < 0) return inv().pow(-a);
-        Fp t = pow(a >> 1);
+        StaticFp t = pow(a >> 1);
         t *= t;
         if (a & 1) t *= *this;
         return t;
     }
-    constexpr Fp inv() const noexcept {
-        Fp u, v;
-        extended_euclidean<long long, Fp>(n, m, u, v);
+    constexpr StaticFp inv() const noexcept {
+        StaticFp u, v;
+        extended_euclidean<long long, StaticFp>(n, m, u, v);
         return u;
     }
-    constexpr bool operator==(const Fp& a) const noexcept {
+    constexpr bool operator==(const StaticFp& a) const noexcept {
         return n == a.n;
     }
-    constexpr bool operator!=(const Fp& a) const noexcept {
+    constexpr bool operator!=(const StaticFp& a) const noexcept {
         return n != a.n;
     }
-    friend constexpr istream& operator>>(istream& s, Fp& a) {
+    friend constexpr istream& operator>>(istream& s, StaticFp& a) {
         return s >> a.n;
     }
-    friend constexpr ostream& operator<<(ostream& s, const Fp& a) {
+    friend constexpr ostream& operator<<(ostream& s, const StaticFp& a) {
         return s << a.n;
     }
 };
@@ -379,8 +379,8 @@ int main() {
     constexpr long long INFL = (1LL << 62);
     long long x, y;
 
-    BinomialCoefficient< Fp<MOD> > bc(10);
-    cout << bc.finv(9) << '\n'; // 712324701 (Fp<mod>(9)!.inv())
+    BinomialCoefficient< StaticFp<MOD> > bc(10);
+    cout << bc.finv(9) << '\n'; // 712324701 (StaticFp<mod>(9)!.inv())
     cout << bc.finv(10) << '\n'; // undefined behaviour (accessing out of range using operator[])
     cout << '\n';
 
@@ -388,15 +388,15 @@ int main() {
     cout << x << ", " << y << '\n'; // 3, -11 (111 * 3 + 30 * (-11) = 3 = gcd(111, 30))
     cout << '\n';
 
-    Fp<MOD> d;
+    StaticFp<MOD> d;
     cout << d << '\n'; // 0
     cout << '\n';
 
-    long long t = Fp<MOD>(2);
+    long long t = StaticFp<MOD>(2);
     cout << (t - 3) << '\n'; // -1
     cout << '\n';
 
-    Fp<MOD> a(2);
+    StaticFp<MOD> a(2);
     cout << (++a) << '\n' << (a++) << '\n' << a << '\n' << (--a) << '\n' << (a--) << '\n' << a << '\n'; // 3, 3, 4, 3, 3, 2
     cout << '\n';
 
@@ -418,21 +418,21 @@ int main() {
     cout << a.inv() << '\n' << a << '\n'; // 499122177, 2
     cout << '\n';
 
-    Fp<MODL> b(INFL);
+    StaticFp<MODL> b(INFL);
     cout << b << '\n'; // 6505812270818
     cout << b * INFL << '\n'; // 6130151462911
     cout << (b *= INFL) << '\n'; // 6130151462911
     cout << '\n';
 
-    cout << Fp<MODL>(2).pow(122) << '\n'; // 9031593934686
-    cout << Fp<MODL>(2).pow(244) << '\n'; // 10412815166631
-    cout << Fp<MODL>(2).pow(1000000) << '\n'; // 13282742706460
+    cout << StaticFp<MODL>(2).pow(122) << '\n'; // 9031593934686
+    cout << StaticFp<MODL>(2).pow(244) << '\n'; // 10412815166631
+    cout << StaticFp<MODL>(2).pow(1000000) << '\n'; // 13282742706460
     cout << '\n';
 
     usec st;
 
     st = tNow();
-    Fp<MODL> basel(1);
+    StaticFp<MODL> basel(1);
     for (int i = 0; i < 1000000000; ++i) basel *= 2;
     cout << basel << '\n'; // 26024802902219
     cout << basel.inv() << '\n'; // 2636315093014
@@ -440,7 +440,7 @@ int main() {
     cout << '\n';
 
     st = tNow();
-    Fp<MOD> base(1);
+    StaticFp<MOD> base(1);
     for (int i = 0; i < 1000000000; ++i) base *= 2;
     cout << base << '\n'; // 851104391
     cout << base.inv() << '\n'; // 394316601
