@@ -170,6 +170,8 @@ public:
         return s << a.n;
     }
 };
+using Fp9 = StaticFp<998244353>;
+using Fp1 = StaticFp<1000000007>;
 
 using mod_id_type = int;
 template<mod_id_type id>
@@ -316,6 +318,7 @@ template<mod_id_type id>
 Barrett DynamicFp<id>::bt{DynamicFp<id>::DEFAULT_MOD};
 template<mod_id_type id>
 bool DynamicFp<id>::instances_created = false;
+using Fp = DynamicFp<-1>;
 
 template<class T>
 struct BinomialCoefficient {
