@@ -53,6 +53,7 @@ using mod_type = long long;
 template<mod_type m>
 struct StaticFp {
     using number_type = long long;
+    static_assert(m >= 2, "mod must be two or greater");
     constexpr static bool is_barrett_safe = m <= mod_type(Barrett::max_mod());
     constexpr static bool use_barrett = false && is_barrett_safe;
     constexpr static Barrett bt{m};
@@ -208,7 +209,7 @@ public:
     }
     constexpr void set_mod(mod_type mm) {
         if (instances_created) throw runtime_error("mod cannot be reset after instance(s) are created");
-        if (mm < 2) throw invalid_argument("mod can only be two or greater");
+        if (mm < 2) throw invalid_argument("mod must be two or greater");
         bt = Barrett(m = mm);
     }
     template<typename T> constexpr operator T() const {
@@ -381,6 +382,8 @@ int main() {
     // constexpr int INF = (1 << 30);
     constexpr long long INFL = (1LL << 62);
     long long x, y;
+
+    // cout << StaticFp<1>(10) << '\n'; // static assertion fails
 
     BinomialCoefficient< StaticFp<MOD> > bc(10);
     cout << bc.finv(9) << '\n'; // 712324701 (StaticFp<mod>(9)!.inv())
