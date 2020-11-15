@@ -106,9 +106,8 @@ public:
         if constexpr (use_barrett) n = bt.mul(n, a.n);
         else {
             if (!a) n = 0;
-            else if (n <= max_num / a.n) {
-                (n *= a.n) %= m;
-            } else {
+            else if (n <= max_num / a.n) (n *= a.n) %= m;
+            else {
                 StaticFp t(*this);
                 (t += t) *= StaticFp(a.n >> 1);
                 if (a.n & 1) *this += t;
@@ -248,9 +247,8 @@ public:
         if (use_barrett()) n = bt.mul(n, a.n);
         else {
             if (!a) n = 0;
-            else if (n <= max_num / a.n) {
-                (n *= a.n) %= m;
-            } else {
+            else if (n <= max_num / a.n) (n *= a.n) %= m;
+            else {
                 DynamicFp t(*this);
                 (t += t) *= DynamicFp(a.n >> 1);
                 if (a.n & 1) *this += t;
