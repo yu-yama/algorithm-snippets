@@ -8,13 +8,19 @@ struct PrimeFactorization {
     using exponent_type = int;
 private:
     map<number_type, exponent_type> factors_;
+    number_type n;
 public:
-    PrimeFactorization(number_type n) {
-        for (number_type i = 2; i * i <= n; ++i) while (n % i == 0) ++factors_[i], n /= i;
-        if (n != 1) ++factors_[n];
+    PrimeFactorization(number_type nn) : n(nn) {
+        for (number_type i = 2; i * i <= nn; ++i) while (nn % i == 0) ++factors_[i], nn /= i;
+        if (nn != 1) ++factors_[nn];
     }
     const auto& factors() const {
         return factors_;
+    }
+    number_type euler_totient() const {
+        number_type ans = n;
+        for (const auto& i : factors()) (ans /= i.first) *= i.first - 1;
+        return ans;
     }
 };
 
@@ -26,6 +32,7 @@ int main() {
         cout << i << ':';
         for (const auto& j : a.factors()) cout << ' ' << j.first << '^' << j.second;
         cout << '\n';
+        cout << "φ(" << i << ") = " << a.euler_totient() << '\n';
     }
     return 0;
 }
