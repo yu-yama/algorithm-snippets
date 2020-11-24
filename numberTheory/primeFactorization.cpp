@@ -18,9 +18,9 @@ public:
         return factors_;
     }
     number_type euler_totient() const {
-        number_type ans = n;
-        for (const auto& i : factors()) (ans /= i.first) *= i.first - 1;
-        return ans;
+        number_type res = n;
+        for (const auto& i : factors()) (res /= i.first) *= i.first - 1;
+        return res;
     }
 };
 
