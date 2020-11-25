@@ -18,7 +18,7 @@ public:
         is_prime_[0] = (is_prime_[1] = false);
         for (size_type i = 2; i < n; ++i) if (is_prime_[i]) {
             primes_.push_back(i);
-            for (size_type j = i * 2; j < n; j += i) is_prime_[j] = false;
+            for (size_type j = i * i; j < n; j += i) is_prime_[j] = false;
         }
     }
     const vector<bool>& is_prime() const noexcept {
