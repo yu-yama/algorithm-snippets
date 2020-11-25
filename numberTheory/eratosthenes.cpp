@@ -32,6 +32,32 @@ public:
     }
 };
 
+struct SegmentedEratosthenes {
+    using number_type = int;
+    using size_type = vector<number_type>::size_type;
+private:
+    number_type s;
+    Eratosthenes sieve;
+    vector<bool> is_prime_;
+    vector<number_type> primes_;
+public:
+    SegmentedEratosthenes(number_type l, number_type r) : s(sqrt(r) * 1.1), sieve(s), is_prime_(r - l, true) {
+        for (const auto& i : sieve.primes()) for (number_type j = max(i * i, (l + i - 1) / i * i); j < r; j += i) is_prime_[j - l] = false;
+        if (l == 1) is_prime_[0] = false;
+        primes_.reserve((r / log(r) - l / log(l)) * 1.2);
+        for (number_type i = l; i < r; ++i) if (is_prime_[i - l]) primes_.push_back(i);
+    }
+    const vector<bool>& is_prime() const noexcept {
+        return is_prime_;
+    }
+    bool is_prime(size_type n) const noexcept {
+        return is_prime_[n];
+    }
+    const vector<number_type>& primes() const noexcept {
+        return primes_;
+    }
+};
+
 namespace {
     using usec = chrono::microseconds;
     usec tNow() {
@@ -47,6 +73,12 @@ int main() {
     cerr << (tNow() - st).count() << '\n';
     st = tNow();
     for (const auto& i : sieve.primes()) cout << i << '\n';
+    cerr << (tNow() - st).count() << '\n';
+    st = tNow();
+    SegmentedEratosthenes ssieve(99000000, 100000000);
+    cerr << (tNow() - st).count() << '\n';
+    st = tNow();
+    for (const auto& i : ssieve.primes()) cout << i << '\n';
     cerr << (tNow() - st).count() << '\n';
     return 0;
 }
