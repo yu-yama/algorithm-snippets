@@ -46,7 +46,7 @@ int main() {
     Eratosthenes sieve(1000000);
     cerr << (tNow() - st).count() << '\n';
     st = tNow();
-    for (const auto& i : sieve.primes()) cout << i << endl;
+    for (const auto& i : sieve.primes()) cout << i << '\n';
     cerr << (tNow() - st).count() << '\n';
     return 0;
 }
