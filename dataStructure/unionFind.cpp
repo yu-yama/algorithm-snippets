@@ -12,7 +12,7 @@ struct UnionFind {
     vector<index_type> parent, rank;
     UnionFind(size_type n = 0) : parent(n, ROOT_PARENT), rank(n, 0) {}
     index_type root(index_type x) {
-        return (parent.at(x) == ROOT_PARENT ? x : parent.at(x) = root(parent.at(x)));
+        return parent.at(x) == ROOT_PARENT ? x : parent.at(x) = root(parent.at(x));
     }
     bool in_same(index_type x, index_type y) {
         return root(x) == root(y);
@@ -35,7 +35,7 @@ struct UnionFindBySize {
     vector<index_type> parent;
     UnionFindBySize(size_type n = 0) : parent(n, ROOT_PARENT) {}
     index_type root(index_type x) {
-        return (parent.at(x) < 0 ? x : parent.at(x) = root(parent.at(x)));
+        return parent.at(x) < 0 ? x : parent.at(x) = root(parent.at(x));
     }
     bool in_same(index_type x, index_type y) {
         return root(x) == root(y);
