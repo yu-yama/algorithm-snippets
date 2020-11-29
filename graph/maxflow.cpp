@@ -199,31 +199,5 @@ int main() {
     }
     cout << '\n';
 
-    // test with sample graph
-    MaxFlowGraph<int> h(6);
-    h.add_edge(0, 1, 16);
-    h.add_edge(0, 2, 13);
-    h.add_edge(1, 2, 10);
-    h.add_edge(1, 3, 12);
-    h.add_edge(2, 1, 4);
-    h.add_edge(2, 4, 14);
-    h.add_edge(3, 2, 9);
-    h.add_edge(3, 5, 20);
-    h.add_edge(4, 3, 7);
-    h.add_edge(4, 5, 4);
-    cout << h.flow(0, 5) << '\n'; // 23
-    for (const auto& i : h.edges()) cout << i.from << " -> " << i.to << ": " << i.flow << " / " << i.cap << '\n';
-    // 0 -> 1: 12 / 16
-    // 0 -> 2: 11 / 13
-    // 1 -> 2: 0 / 10
-    // 1 -> 3: 12 / 12
-    // 2 -> 1: 0 / 4
-    // 2 -> 4: 11 / 14
-    // 3 -> 2: 0 / 9
-    // 3 -> 5: 19 / 20
-    // 4 -> 3: 7 / 7
-    // 4 -> 5: 4 / 4
-    cout << '\n';
-
     return 0;
 }
