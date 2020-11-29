@@ -330,11 +330,7 @@ struct BinomialCoefficient {
     using index_type = long long;
     vector<T> fact_, inv_, finv_;
     constexpr BinomialCoefficient() noexcept {}
-    constexpr BinomialCoefficient(index_type n) noexcept {
-        init(n);
-    }
-    constexpr void init(const index_type& n) noexcept {
-        fact_.assign(n, 1), inv_.assign(n, 1), finv_.assign(n, 1);
+    constexpr BinomialCoefficient(index_type n) noexcept : fact_(n, 1), inv_(n, 1), finv_(n, 1) {
         auto m = fact_.front().mod();
         for (index_type i = 2; i < n; ++i) {
             fact_[i] = fact_[i - 1] * i;
