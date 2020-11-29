@@ -106,18 +106,30 @@ public:
     constexpr StaticFp& operator*=(const StaticFp& a) noexcept {
         if constexpr (use_barrett) n = bt.mul(n, a.n);
         else {
-            if (!a) n = 0;
-            else if (n <= max_num / a.n) (n *= a.n) %= m;
-            else {
-                #ifdef _MSC_VER
+            #ifdef _MSC_VER
+                if (!a) n = 0;
+                else if (n <= max_num / a.n) (n *= a.n) %= m;
+                else {
                     StaticFp t(*this);
                     (t += t) *= StaticFp(a.n >> 1);
                     if (a.n & 1) *this += t;
                     else *this = t;
-                #else
-                    n = (unsigned __int128)n * a.n % m;
-                #endif
-            }
+                }
+            #else
+                if constexpr ((m & (m - 1)) == 0) {
+                    // if m is a power of 2
+                    n = ((unsigned __int128)n * a.n) & (m - 1);
+                } else if constexpr ((m & (m + 1)) == 0) {
+                    // if (m + 1) is a power of 2
+                    unsigned __int128 t = (unsigned __int128)n * a.n;
+                    n = (t >> __builtin_popcountll(m)) + (t & m);
+                    if (n >= static_cast<number_type>(m)) n -= m;
+                } else {
+                    if (!a) n = 0;
+                    else if (n <= max_num / a.n) (n *= a.n) %= m;
+                    else n = (unsigned __int128)n * a.n % m;
+                }
+            #endif
         }
         return *this;
     }
