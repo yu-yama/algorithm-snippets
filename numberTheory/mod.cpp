@@ -108,10 +108,14 @@ public:
             if (!a) n = 0;
             else if (n <= max_num / a.n) (n *= a.n) %= m;
             else {
-                StaticFp t(*this);
-                (t += t) *= StaticFp(a.n >> 1);
-                if (a.n & 1) *this += t;
-                else *this = t;
+                #ifdef _MSC_VER
+                    StaticFp t(*this);
+                    (t += t) *= StaticFp(a.n >> 1);
+                    if (a.n & 1) *this += t;
+                    else *this = t;
+                #else
+                    n = (unsigned __int128)n * a.n % m;
+                #endif
             }
         }
         return *this;
