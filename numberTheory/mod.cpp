@@ -58,6 +58,7 @@ struct StaticFp {
     constexpr static bool use_barrett = false && is_barrett_safe;
     constexpr static Barrett bt{m};
     constexpr static number_type max_num = numeric_limits<number_type>::max();
+    static_assert(m <= max_num, "mod must not overflow in number_type");
 private:
     number_type n;
     constexpr void fix_negative() noexcept {
