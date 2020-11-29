@@ -166,11 +166,13 @@ public:
     }
 };
 
-constexpr int twod_to_oned(int i, int j, int w) noexcept {
+template<typename size_type>
+constexpr size_type twod_to_oned(size_type i, size_type j, size_type w) noexcept {
     return (i * w) + j;
 }
 
-constexpr pair<int, int> oned_to_twod(int i, int w) noexcept {
+template<typename size_type>
+constexpr pair<size_type, size_type> oned_to_twod(size_type i, size_type w) noexcept {
     return {i / w, i % w};
 }
 
