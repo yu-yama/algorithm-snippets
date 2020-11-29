@@ -147,23 +147,17 @@ public:
     size_type size() const noexcept {
         return n;
     }
-    void add_edge(size_type from, size_type to) {
+    int add_edge(size_type from, size_type to) {
         assert(0 <= from && from < n);
         assert(0 <= to && to < n);
         if (source_side.count(to) || sink_side.count(from)) throw invalid_argument("graph must be bipartite");
         source_side[from], sink_side[to];
-        MaxFlowGraph<int>::add_edge(from, to, 1);
-    }
-    int flow(size_type from, size_type to) {
-        return flow(from, to, numeric_limits<int>::max());
-    }
-    int flow(size_type from, size_type to, int flow_limit) {
-        for (auto&& i : source_side) if (i.second == 0) MaxFlowGraph<int>::add_edge(source(), i.first, 1), i.second = 1;
-        for (auto&& i : sink_side) if (i.second == 0) MaxFlowGraph<int>::add_edge(i.first, sink(), 1), i.second = 1;
-        return MaxFlowGraph<int>::flow(from, to, flow_limit);
+        return MaxFlowGraph<int>::add_edge(from, to, 1);
     }
     int max_matching() {
-        return flow(source(), sink());
+        for (auto&& i : source_side) if (i.second == 0) MaxFlowGraph<int>::add_edge(source(), i.first, 1), i.second = 1;
+        for (auto&& i : sink_side) if (i.second == 0) MaxFlowGraph<int>::add_edge(i.first, sink(), 1), i.second = 1;
+        return MaxFlowGraph<int>::flow(source(), sink());
     }
     vector<FlowEdge> matches() {
         vector<FlowEdge> res;
