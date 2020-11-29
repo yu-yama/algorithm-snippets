@@ -54,7 +54,7 @@ template<mod_type m>
 struct StaticFp {
     using number_type = int_fast64_t;
     static_assert(m >= 2, "mod must be two or greater");
-    constexpr static bool is_barrett_safe = m <= mod_type(Barrett::max_mod());
+    constexpr static bool is_barrett_safe = m <= static_cast<mod_type>(Barrett::max_mod());
     constexpr static bool use_barrett = false && is_barrett_safe;
     constexpr static Barrett bt{m};
     constexpr static number_type max_num = numeric_limits<number_type>::max();
@@ -190,7 +190,7 @@ private:
     static bool instances_created;
     number_type n;
     constexpr bool is_barrett_safe() {
-        return m <= mod_type(Barrett::max_mod());
+        return m <= static_cast<mod_type>(Barrett::max_mod());
     }
     constexpr bool use_barrett() {
         return true && is_barrett_safe();
