@@ -7,8 +7,8 @@ using namespace std;
 
 namespace {
     struct Barrett {
-        using single_int = uint32_t;
-        using double_int = uint64_t;
+        using single_int = uint_fast32_t;
+        using double_int = uint_fast64_t;
         single_int m;
         double_int im;
         constexpr Barrett(single_int mm) : m(mm), im((double_int)-1 / m + 1) {}
@@ -49,10 +49,10 @@ constexpr T extended_euclidean(const T& a, const T& b, U& x, U& y) noexcept {
     return r;
 }
 
-using mod_type = long long;
+using mod_type = uint_fast64_t;
 template<mod_type m>
 struct StaticFp {
-    using number_type = long long;
+    using number_type = int_fast64_t;
     static_assert(m >= 2, "mod must be two or greater");
     constexpr static bool is_barrett_safe = m <= mod_type(Barrett::max_mod());
     constexpr static bool use_barrett = false && is_barrett_safe;
@@ -97,7 +97,7 @@ public:
         return t;
     }
     constexpr StaticFp& operator+=(const StaticFp& a) noexcept {
-        if ((n += a.n) >= m) n -= m;
+        if ((n += a.n) >= static_cast<number_type>(m)) n -= m;
         return *this;
     }
     constexpr StaticFp& operator-=(const StaticFp& a) noexcept {
@@ -159,7 +159,7 @@ public:
     }
     constexpr StaticFp inv() const noexcept {
         StaticFp u, v;
-        extended_euclidean<long long, StaticFp>(n, m, u, v);
+        extended_euclidean<number_type, StaticFp>(n, m, u, v);
         return u;
     }
     constexpr bool operator==(const StaticFp& a) const noexcept {
@@ -178,10 +178,10 @@ public:
 using Fp9 = StaticFp<998244353>;
 using Fp1 = StaticFp<1000000007>;
 
-using mod_id_type = int;
+using mod_id_type = int_fast32_t;
 template<mod_id_type id>
 struct DynamicFp {
-    using number_type = long long;
+    using number_type = int_fast64_t;
     constexpr static number_type max_num = numeric_limits<number_type>::max();
     constexpr static mod_type DEFAULT_MOD = 998244353;
 private:
@@ -214,6 +214,7 @@ public:
     constexpr void set_mod(mod_type mm) {
         if (instances_created) throw runtime_error("mod cannot be reset after instance(s) are created");
         if (mm < 2) throw invalid_argument("mod must be two or greater");
+        else if (mm > max_num) throw invalid_argument("mod must not overflow in number_type");
         bt = Barrett(m = mm);
     }
     template<typename T> constexpr operator T() const {
@@ -242,7 +243,7 @@ public:
         return t;
     }
     constexpr DynamicFp& operator+=(const DynamicFp& a) noexcept {
-        if ((n += a.n) >= m) n -= m;
+        if ((n += a.n) >= static_cast<number_type>(m)) n -= m;
         return *this;
     }
     constexpr DynamicFp& operator-=(const DynamicFp& a) noexcept {
@@ -300,7 +301,7 @@ public:
     }
     constexpr DynamicFp inv() const noexcept {
         DynamicFp u(m), v(m);
-        extended_euclidean<long long, DynamicFp>(n, m, u, v);
+        extended_euclidean<number_type, DynamicFp>(n, m, u, v);
         return u;
     }
     constexpr bool operator==(const DynamicFp& a) const noexcept {
