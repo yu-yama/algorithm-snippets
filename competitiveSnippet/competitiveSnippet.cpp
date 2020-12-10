@@ -57,10 +57,19 @@ constexpr int MOD9 = 998244353;
 #define ALL(v) (v).begin(), (v).end()
 #define SRT(v) sort(ALL(v))
 #define UNQ(v) sort(ALL(v)); v.erase(unique(ALL(v)), v.end())
-#define YES(condition) cout << (condition ? "YES" : "NO") << endl
-#define Yes(condition) cout << (condition ? "Yes" : "No") << endl
-#define POSS(condition) cout << (condition ? "POSSIBLE" : "IMPOSSIBLE") << endl
-#define Poss(condition) cout << (condition ? "Possible" : "Impossible") << endl
+
+void YES(bool condition) {
+    cout << (condition ? "YES" : "NO") << '\n';
+}
+void Yes(bool condition) {
+    cout << (condition ? "Yes" : "No") << '\n';
+}
+void POSS(bool condition) {
+    cout << (condition ? "POSSIBLE" : "IMPOSSIBLE") << '\n';
+}
+void Poss(bool condition) {
+    cout << (condition ? "Possible" : "Impossible") << '\n';
+}
 
 vpi m4 = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
 vpi m8 = {{-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}};
@@ -97,7 +106,7 @@ template<typename T> istream& operator>>(istream& s, vector<T>& v) {
     return s;
 }
 template<typename T> ostream& operator<<(ostream& s, vector<T>& v) {
-    REPZ(i, v.size()) s << v.at(i) << endl;
+    REPZ(i, v.size()) s << v.at(i) << '\n';
     return s;
 }
 
