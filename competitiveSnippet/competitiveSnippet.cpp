@@ -13,32 +13,32 @@
 
 using namespace std;
 
-typedef long long ll;
-typedef string st;
-typedef pair<int, int> pi;
-typedef pair<ll, ll> pl;
-typedef vector<char> vc;
-typedef vector<int> vi;
-typedef vector<pi> vpi;
-typedef vector<ll> vl;
-typedef vector<pl> vpl;
-typedef vector<st> vst;
-typedef vector<vc> vvc;
-typedef vector<vi> vvi;
-typedef vector<vpi> vvpi;
-typedef vector<vl> vvl;
-typedef vector<vpl> vvpl;
-typedef vector<vst> vvst;
-typedef vector<vvc> vvvc;
-typedef vector<vvi> vvvi;
-typedef vector<vvpi> vvvpi;
-typedef vector<vvl> vvvl;
-typedef vector<vvpl> vvvpl;
-typedef vector<vvst> vvvst;
-typedef map<int, int> mii;
-typedef map<char, int> mci;
-typedef map<string, int> msi;
-typedef map<string, char> msc;
+using ll = long long;
+using st = string;
+using pi = pair<int, int>;
+using pl = pair<ll, ll>;
+using vc = vector<char>;
+using vi = vector<int>;
+using vpi = vector<pi>;
+using vl = vector<ll>;
+using vpl = vector<pl>;
+using vst = vector<st>;
+using vvc = vector<vc>;
+using vvi = vector<vi>;
+using vvpi = vector<vpi>;
+using vvl = vector<vl>;
+using vvpl = vector<vpl>;
+using vvst = vector<vst>;
+using vvvc = vector<vvc>;
+using vvvi = vector<vvi>;
+using vvvpi = vector<vvpi>;
+using vvvl = vector<vvl>;
+using vvvpl = vector<vvpl>;
+using vvvst = vector<vvst>;
+using mii = map<int, int>;
+using mci = map<char, int>;
+using msi = map<string, int>;
+using msc = map<string, char>;
 
 #define INF 1000000000
 #define LINF 1000000000000000
