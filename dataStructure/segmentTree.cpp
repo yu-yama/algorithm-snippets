@@ -29,9 +29,9 @@ private:
     bool built;
     void check_size(size_type i) const {
         if (i < 0 || i >= n) {
-            ostringstream e;
-            e << "SegmentTree::at out_of_range (index " << i << " given to a SegmentTree of length " << n << ")\n";
-            throw out_of_range(e.str());
+            ostringstream s;
+            s << "SegmentTree::at out_of_range (index " << i << " given to a SegmentTree of length " << n << ")\n";
+            throw out_of_range(s.str());
         }
     }
     size_type leaf_index(size_type i) const {
