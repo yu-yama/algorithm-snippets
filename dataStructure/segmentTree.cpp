@@ -19,7 +19,7 @@ struct SegmentTree {
     // the set must be form a monoid
     // – for any x, y, z in the set, op_(op_(x, y), z) = op_(x, op_(y, z)) [associativity], and
     // – e in the set exists such that, for any x in the set, op_(x, e) = op_(e, x) = x [existence of an ee element]
-    using op_type = function<T(T, T)>;
+    using op_type = function<T(const T&, const T&)>;
     using size_type = int;
 private:
     size_type n, capacity_;
