@@ -71,6 +71,8 @@ void Poss(bool condition) {
     cout << (condition ? "Possible" : "Impossible") << '\n';
 }
 
+vpi m2 = {{0, 1}, {1, 0}};
+vpi m3 = {{0, 1}, {1, 0}, {1, 1}};
 vpi m4 = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
 vpi m8 = {{-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}};
 st ___sin = "";
