@@ -40,9 +40,10 @@ using mci = map<char, int>;
 using msi = map<string, int>;
 using msc = map<string, char>;
 
-#define INF 1000000000
-#define LINF 1000000000000000
-#define MOD 1000000007
+constexpr int INF = 1 << 30;
+constexpr long long INFL = 1LL << 62;
+constexpr int MOD1 = 1000000007;
+constexpr int MOD9 = 998244353;
 #define FST first
 #define SND second
 #define REP(i, l, r) for (ll i = l; i < static_cast<decltype(i)>(r); ++i)
