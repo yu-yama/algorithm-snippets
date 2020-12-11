@@ -91,9 +91,17 @@ public:
         return tr[leaf_index(i)];
     }
     struct SegmentTreeElement {
+    private:
         SegmentTree& t;
         size_type i;
+    public:
         SegmentTreeElement(SegmentTree& tt, size_type ii) : t(tt), i(ii) {}
+        const SegmentTree& segtree() const {
+            return t;
+        }
+        size_type index() const {
+            return i;
+        }
         const T& operator=(const T& x) {
             if (t.built) t.update(i, x);
             else t.set(i, x);
