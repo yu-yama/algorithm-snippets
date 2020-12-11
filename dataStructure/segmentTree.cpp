@@ -99,6 +99,21 @@ public:
             else t.set(i, x);
             return x;
         }
+        const T& operator+=(const T& x) {
+            return *this = t.get(i) + x;
+        }
+        const T& operator-=(const T& x) {
+            return *this = t.get(i) - x;
+        }
+        const T& operator*=(const T& x) {
+            return *this = t.get(i) * x;
+        }
+        const T& operator/=(const T& x) {
+            return *this = t.get(i) / x;
+        }
+        const T& operator%=(const T& x) {
+            return *this = t.get(i) % x;
+        }
     };
     SegmentTreeElement at(size_type i) {
         check_size(i);
