@@ -87,6 +87,9 @@ public:
         }
         return op_(al, ar);
     }
+    T get(size_type i) {
+        return tr[leaf_index(i)];
+    }
     struct SegmentTreeElement {
         SegmentTree& t;
         size_type i;
