@@ -94,14 +94,40 @@ public:
         }
         return op_(al, ar);
     }
+    const optional<T>& get(size_type i) const {
+        return tr[leaf_index(i)];
+    }
     struct SegmentTreeOptElement {
+    private:
         SegmentTreeOpt& t;
         size_type i;
+    public:
         SegmentTreeOptElement(SegmentTreeOpt& tt, size_type ii) : t(tt), i(ii) {}
+        const SegmentTreeOpt& segtree() const {
+            return t;
+        }
+        size_type index() const {
+            return i;
+        }
         const T& operator=(const T& x) {
             if (t.built) t.update(i, x);
             else t.set(i, x);
             return x;
+        }
+        const T& operator+=(const T& x) {
+            return *this = t.get(i) + x;
+        }
+        const T& operator-=(const T& x) {
+            return *this = t.get(i) - x;
+        }
+        const T& operator*=(const T& x) {
+            return *this = t.get(i) * x;
+        }
+        const T& operator/=(const T& x) {
+            return *this = t.get(i) / x;
+        }
+        const T& operator%=(const T& x) {
+            return *this = t.get(i) % x;
         }
     };
     SegmentTreeOptElement at(size_type i) {
@@ -110,10 +136,10 @@ public:
     }
     const optional<T>& at(size_type i) const {
         check_size();
-        return tr[leaf_index(i)];
+        return get(i);
     }
     const optional<T>& operator[](size_type i) const {
-        return tr[leaf_index(i)];
+        return get(i);
     }
 };
 
