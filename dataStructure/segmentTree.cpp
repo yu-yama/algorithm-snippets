@@ -87,7 +87,7 @@ public:
         }
         return op_(al, ar);
     }
-    T get(size_type i) {
+    const T& get(size_type i) const {
         return tr[leaf_index(i)];
     }
     struct SegmentTreeElement {
@@ -129,10 +129,10 @@ public:
     }
     const T& at(size_type i) const {
         check_size();
-        return tr[leaf_index(i)];
+        return get(i);
     }
     const T& operator[](size_type i) const {
-        return tr[leaf_index(i)];
+        return get(i);
     }
 };
 
